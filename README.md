@@ -1,1 +1,480 @@
-# Valentine
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Love Story with Adeola ❤️</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff1493;
+            --secondary: #ff69b4;
+            --accent: #4a90e2;
+            --background: #1a1a2e;
+            --text: #ffffff;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: var(--background);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--text);
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-heart {
+            font-size: 50px;
+            animation: pulse 1s infinite;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            opacity: 0;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        .title {
+            font-size: 3em;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(255,20,147,0.5);
+            margin-bottom: 20px;
+        }
+
+        .floating-hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .content-section {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            transform: translateY(50px);
+            opacity: 0;
+        }
+
+        .message-container {
+            position: relative;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.05);
+            margin: 20px 0;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+            transition: transform 0.5s;
+        }
+
+        .btn:hover::before {
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            color: white;
+        }
+
+        .btn-no {
+            background: linear-gradient(45deg, #ff4d4d, #ff8080);
+            color: white;
+        }
+
+        .language-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+        }
+
+        .celebration-content {
+            text-align: center;
+            transform: scale(0);
+        }
+
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        .music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .photo-gallery {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+        }
+
+        .photo-placeholder {
+            width: 250px;
+            height: 250px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4em;
+            animation: heartbeat 1.5s infinite;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 30px rgba(255,20,147,0.3);
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.1); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.05); }
+            60% { transform: scale(1); }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5em;
+            }
+
+            .message-container {
+                padding: 15px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+
+            .photo-placeholder {
+                width: 150px;
+                height: 150px;
+                font-size: 3em;
+            }
+
+            .language-toggle {
+                padding: 8px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2em;
+            }
+
+            .loading-heart {
+                font-size: 40px;
+            }
+
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+
+            .photo-placeholder {
+                width: 120px;
+                height: 120px;
+                font-size: 2.5em;
+            }
+
+            .language-toggle {
+                padding: 5px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="loading-heart">❤️</div>
+    </div>
+
+    <div class="floating-hearts"></div>
+    
+    <button class="language-toggle" onclick="toggleLanguage()">
+        Switch to English
+    </button>
+
+    <div class="main-container">
+        <div class="header">
+            <h1 class="title">Adeola Mi ❤️</h1>
+            <p class="subtitle">Mother of my two unborn kids 👶👶</p>
+        </div>
+
+        <div class="content-section">
+            <div class="message-container" id="main-message">
+                Baby make you be my Valentine,
+                I don write this special website just for you!
+                No do me wayo, choose yes na 😄
+            </div>
+
+            <div class="photo-gallery">
+                <div class="photo-placeholder">💖</div>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn btn-yes" onclick="sayYes()">YES 😍</button>
+                <button class="btn btn-no" id="noBtn" onmouseover="moveButton()">NO 😢</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="celebration">
+        <div class="celebration-content">
+            <h1>Yeeeee! 🎉</h1>
+            <p>Adeola mi! You don make me the happiest person!</p>
+            <div style="font-size: 5em; margin: 20px;">❤️</div>
+        </div>
+    </div>
+
+    <button class="music-toggle" onclick="toggleMusic()">🎵</button>
+
+    <script>
+        let isPidgin = true;
+        let audio;
+
+        // Initialize audio
+        function initAudio() {
+            audio = new Audio('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/CustomEase.min.js');
+            audio.loop = true;
+        }
+
+        // Create floating hearts
+        function createFloatingHearts() {
+            const container = document.querySelector('.floating-hearts');
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.style.position = 'absolute';
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.fontSize = `${Math.random() * 20 + 10}px`;
+                heart.style.opacity = Math.random() * 0.5 + 0.5;
+                heart.style.animation = `float ${Math.random() * 10 + 5}s linear infinite`;
+                container.appendChild(heart);
+            }
+        }
+
+        const pidginMessages = [
+            "Adeola baby, why you dey run? Our kids dey wait! 👶👶",
+            "My first wife, you still dey form?",
+            "Nah why you short",
+            "See as you dey do like Agege bread! 😂",
+            "This love strong pass your shakara! ❤️",
+            "Baby no dey do me strong thing na! 💪",
+            "Na me be your last bus stop! 🚌"
+        ];
+
+        const englishMessages = [
+            "Adeola my love, why are you running? Our future awaits! 👶👶",
+            "My future queen, why are you playing hard to get?",
+            "This is why you are summarize",
+            "Look at you being all precious! 😂",
+            "This love is stronger than your resistance! ❤️",
+            "Baby, don't be so difficult! 💪",
+            "I'm your final destination! 🚌"
+        ];
+
+        function toggleLanguage() {
+            isPidgin = !isPidgin;
+            const toggleBtn = document.querySelector('.language-toggle');
+            toggleBtn.textContent = isPidgin ? "Switch to English" : "Switch to Pidgin";
+            updateMessage();
+        }
+
+        function updateMessage() {
+            const messageDiv = document.getElementById('main-message');
+            const messages = isPidgin ? pidginMessages : englishMessages;
+            messageDiv.innerHTML = messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        function moveButton() {
+            const btn = document.getElementById('noBtn');
+            const container = document.querySelector('.main-container');
+            
+            const maxX = container.clientWidth - btn.clientWidth - 20;
+            const maxY = container.clientHeight - btn.clientHeight - 20;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            gsap.to(btn, {
+                x: randomX,
+                y: randomY,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+            
+            updateMessage();
+        }
+
+        function createFirework(x, y) {
+            const colors = ['#ff69b4', '#ff1493', '#ff4d4d', '#ff8080'];
+            for (let i = 0; i < 30; i++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.style.left = x + 'px';
+                firework.style.top = y + 'px';
+                firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                document.body.appendChild(firework);
+
+                const angle = (i * 12) * Math.PI / 180;
+                const velocity = 10;
+                gsap.to(firework, {
+                    x: Math.cos(angle) * 200,
+                    y: Math.sin(angle) * 200,
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power2.out",
+                    onComplete: () => firework.remove()
+                });
+            }
+        }
+
+        function sayYes() {
+            const celebration = document.querySelector('.celebration');
+            celebration.style.display = 'flex';
+            
+            gsap.to('.celebration-content', {
+                scale: 1,
+                duration: 1,
+                ease: "elastic.out(1, 0.5)"
+            });
+
+            // Create fireworks
+            setInterval(() => {
+                createFirework(
+                    Math.random() * window.innerWidth,
+                    Math.random() * window.innerHeight
+                );
+            }, 500);
+        }
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+
+        // Initialize
+        window.onload = () => {
+            initAudio();
+            createFloatingHearts();
+            
+            // Loading animation
+            gsap.to('.loading-screen', {
+                opacity: 0,
+                duration: 1,
+                delay: 1,
+                onComplete: () => {
+                    document.querySelector('.loading-screen').style.display = 'none';
+                }
+            });
+
+            gsap.to('.main-container', {
+                opacity: 1,
+                duration: 1,
+                delay: 1.5
+            });
+
+            gsap.to('.content-section', {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                delay: 2
+            });
+        };
+    </script>
+</body>
+</html>
